@@ -1,0 +1,201 @@
+<html>
+
+<body>
+
+<div id="page-wrapper">
+
+		<h1>Text File Reader</h1>
+		<div>
+			Select a text file: 
+			<input type="file" id="fileInput">
+		</div>
+		<pre id="fileDisplayArea"><pre>
+
+	</div>
+	
+<script type="text/javascript" src="./wz_jsgraphics.js"></script>
+<script type="text/javascript">
+
+
+    var localizationProtein = [];
+    function mouseEventHandler(mEvent) {
+        // Internet Explorer
+
+        if (mEvent.srcElement) {
+            showPopup(mEvent, 'linkPopup', mEvent.srcElement);
+        }
+        // Netscape and Firefox
+        else if (mEvent.target) {
+            showPopup(mEvent, 'linkPopup', mEvent.target);
+        }
+    }
+
+    function getPopupObject(myId) {
+        if (document.getElementById(myId)) {
+            return document.getElementById(myId);
+        }
+        else {
+            return window.document[myId];
+        }
+    }
+
+    function showPopup(myEvent, id, myElement) {
+        var popup = getPopupObject(id);
+        if (popup) {
+            popup.style.visibility = 'hidden';
+            var x = myEvent.clientX;
+            var y = myEvent.clientY;
+            x = parseInt(myEvent.clientX + document.body.scrollLeft);
+            y = parseInt(myEvent.clientY + document.body.scrollTop);
+            var popupText = getPopupObject(id + "Text");
+            
+            var text = "";
+            for (var i = 0; i < localizationProtein.length; i++) {
+                var localization = localizationProtein[i];
+                text += '\n';
+                text += localization.proteinID;
+            }
+
+
+            popupText.firstChild.nodeValue = text;
+
+            popup.style.left = x;
+            popup.style.top = y;
+
+            popup.style.visibility = 'visible';
+        }
+    }
+
+    function highlightCompartments(cellType, proteinID, proteinLocalization) {
+        var divCanvas = "myCanvas";
+        var jg = new jsGraphics(divCanvas);
+        var highlightColour = "#0099ff";
+
+        if (cellType == "eukaryota") {
+
+            if (proteinLocalization == "nucleus") {
+
+                jg.setColor(highlightColour);
+                jg.fillPolygon(new Array(234, 226, 223, 224, 229, 237, 244, 252, 258, 264, 274, 283, 290, 298, 298, 295, 280, 245), new Array(140, 145, 152, 160, 164, 168, 170, 172, 172, 173, 173, 172, 170, 165, 157, 148, 141, 138));
+                jg.paint();
+            }
+            else if (proteinLocalization == "chloroplast")
+            {
+                jg.setColor(highlightColour);
+                jg.fillPolygon(new Array(163, 160, 160, 164, 170, 176, 184, 193, 200, 208, 215, 221, 225, 230, 229, 214, 196, 184, 172), new Array(124, 128, 134, 138, 141, 142, 142, 142, 141, 139, 136, 134, 132, 129, 121, 115, 114, 115, 118));
+                jg.paint();
+            }
+            else if (proteinLocalization == "vacuole") {
+                jg.setColor(highlightColour);
+                jg.fillPolygon(new Array(318,312,311,314,318,323,327,330,330,327,322,318,318,322,328,336,345,352,361,369,373,379,384,390,395,396,388,378,363,351,340,329), new Array(125,131,136,142,146,152,156,162,168,174,181,187,193,194,193,190,185,183,177,176,174,173,173,172,171,162,152,143,135,128,124,123));
+                jg.paint();
+            }          
+
+        }
+
+
+    }
+
+    function selectCellPicture(cellType, localizationArray) {
+
+        localizationProtein = localizationArray;
+
+
+
+        if (cellType == "eukaryota") {
+            var img = document.createElement("img");
+            img.setAttribute("name", "leop");
+            img.setAttribute("src", "./Euk-Cell-2D.jpg");
+            img.setAttribute("width", "500");
+            img.setAttribute("height", "400");
+            img.setAttribute("alt", "");
+            img.setAttribute("onMouseMove", "javaScript:mouseEventHandler(event);");
+           
+            document.getElementById("myCanvas").appendChild(img);
+        }
+
+
+    }
+
+    window.onload = function () {
+        var fileInput = document.getElementById('fileInput');
+        var fileDisplayArea = document.getElementById('fileDisplayArea');
+
+
+        fileInput.addEventListener('change', function (e) {
+            var file = fileInput.files[0];
+            var textType = /text.*/;
+
+            if (file.type.match(textType)) {
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var words = (function () {
+
+                        //split the file contents into separate lines on encountering \R or \r\n or \n
+                        var fileLines = reader.result.trim().replace(/[\R\r\n]/g, ',').split(/[\,]+/g);
+                        console.log("Lines= " + fileLines);
+                        var fileLinesCount = fileLines.length;
+                        console.log("Number of lines=" + fileLinesCount);
+
+                        //create two new arrays - for score and localization
+                        var scoreArray = [];
+                        var localizationArray = [];
+
+                        //Omit the 1st two lines and start from the 3rd line
+                        for (var i = 2; i < fileLines.length; i++) {
+
+                            //Separate the line into words on encountering a tab and print each word
+                            var arrayWords = fileLines[i].replace(/[\t]/g, ',').split(/[\,]+/g);
+                            console.log(arrayWords);
+
+                            // Array containing protein scores
+                            scoreArray.push({
+                                proteinID: arrayWords[0],
+                                proteinScore: arrayWords[1]
+                            });
+
+                            // Array containing protein localizations
+                            localizationArray.push({
+                                proteinID: arrayWords[0],
+                                proteinLocalization: arrayWords[2]
+                            });
+                            //}
+
+                        }
+
+                        //print the contents of the Score array
+                        for (var i = 0; i < scoreArray.length; i++) {
+                            var score = scoreArray[i];
+                            console.log("Protein ID + Score " + score.proteinID, score.proteinScore);
+                        }
+
+                        var cellType = "eukaryota";
+                        selectCellPicture(cellType, localizationArray);
+                        //print the contents of the Localization array
+                        for (var i = 0; i < localizationArray.length; i++) {
+                            var localization = localizationArray[i];
+                            //console.log("Protein ID + Localization " + localization.proteinID, localization.proteinLocalization);                            
+                            highlightCompartments(cellType, localization.proteinID, localization.proteinLocalization);
+                        }
+
+                    } ());
+
+                }
+                reader.readAsText(file);
+
+            }
+
+            else {
+                fileDisplayArea.innerText = "File not supported!"
+            }
+        });
+    }
+
+</script> 
+  <div id="linkPopup" style="position: absolute; top: 0; left: 0; width:300px; z-index: 9000; text-decoration: none; visibility:hidden;"><table bgcolor="blue" border="1">
+	<tr><td style="color:white;" id="linkPopupText">Popup text</td></tr></table>
+  </div>
+  <div id="myCanvas" style="position:relative;width:100%;"></div>
+</body>
+</html>
