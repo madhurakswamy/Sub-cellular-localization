@@ -1,0 +1,201 @@
+<!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">-->
+<html>
+<head runat="server">
+    <title></title>
+    <script type="text/javascript" src="C:\Users\Dangnoy\Downloads\mapper\mapper\wz_jsgraphics.js"></script>
+    <script type="text/javascript">
+        function mouseEventHandler(mEvent) {
+            // Internet Explorer
+            if (mEvent.srcElement) {
+                showPopup(mEvent, 'linkPopup', mEvent.srcElement);
+            }
+            // Netscape and Firefox
+            else if (mEvent.target) {
+                showPopup(mEvent, 'linkPopup', mEvent.target);
+            }
+        }
+
+        function getPopupObject(myId) {
+            if (document.getElementById(myId)) {
+                return document.getElementById(myId);
+            }
+            else {
+                return window.document[myId];
+            }
+        }
+
+        function showPopup(myEvent, id, myElement) {
+            var popup = getPopupObject(id);
+            if (popup) {
+                popup.style.visibility = 'hidden';
+                var x = myEvent.clientX;
+                var y = myEvent.clientY;
+                x = parseInt(myEvent.clientX + document.body.scrollLeft);
+                y = parseInt(myEvent.clientY + document.body.scrollTop);
+                var popupText = getPopupObject(id + "Text");
+
+                var arrLocalization = OutputFile();
+
+
+                var arrLoc = arrLocalization[1];
+                var arrNuc = [];
+                arrNuc = arrLoc[0];
+                var text = "";
+
+                for (var i = 0; i < arrNuc.length; i++) {
+
+                    var localization = arrNuc[i];
+                    text += '\n';
+                    text += localization.proteinID;
+                }
+
+
+
+                
+//                var text = "<" + myElement.nodeName + ">";
+//                if (myElement.id)
+//                    text += ", id is: '" + myElement.id + "'";
+//                if (myElement.parentNode)
+//                    text += ", parent is: <" + myElement.parentNode.nodeName + ">";
+                popupText.firstChild.nodeValue = text;
+
+                popup.style.left = x;
+                popup.style.top = y;
+
+                popup.style.visibility = 'visible';
+            }
+        }
+
+
+        function DRAW(arrInput) {
+            var divCanvas = "myCanvas";
+            var jg = new jsGraphics(divCanvas);
+
+            if (arrInput[0] == "eukaryota") {
+
+                var arrLoc = arrInput[1];
+                var arrNuc = [];
+                arrNuc = arrLoc[0];
+
+
+                for (var i = 0; i < arrNuc.length; i++) {
+
+                    var localization = arrNuc[i];
+
+                    jg.setColor("#0099ff");
+                    jg.fillPolygon(new Array(234, 226, 223, 224, 229, 237, 244, 252, 258, 264, 274, 283, 290, 298, 298, 295, 280, 245), new Array(140, 145, 152, 160, 164, 168, 170, 172, 172, 173, 173, 172, 170, 165, 157, 148, 141, 138));
+                    jg.paint();
+
+                }
+
+                var arrMit = [];
+                arrMit = arrLoc[1];
+
+                for (var i = 0; i < arrMit.length; i++) {
+
+                    var localization = arrMit[i];
+
+                    jg.setColor("#0099ff");
+                    jg.fillPolygon(new Array(161, 154, 150, 150, 152, 155, 158, 162, 166, 171, 176, 181, 184, 187, 186, 184), new Array(156, 159, 163, 168, 172, 175, 177, 179, 180, 180, 180, 180, 177, 173, 168, 164));
+                    jg.paint();
+
+                }
+
+                   
+
+                }
+                else {
+                }
+
+
+//            jg.setColor("#0099ff");
+//            jg.fillPolygon(new Array(270, 266, 264, 266,271,278,284,287,282), new Array(224, 228, 231, 236,239,240,238,232,226));
+//            jg.paint();
+
+
+//            jg.setColor("#0099ff");
+//            jg.fillPolygon(new Array(161, 154, 150, 150, 152, 155, 158, 162, 166,171,176,181,184,187,186,184), new Array(156,159,163,168,172,175,177,179,180,180,180,180,177,173,168,164));
+//            jg.paint();
+
+
+//            jg.setColor("#0099ff");
+//            jg.fillPolygon(new Array(318,312,311,314,318,323,327,330,330,327,322,318,318,322,328,336,345,352,361,369,373,379,384,390,395,396,388,378,363,351,340,329), new Array(125,131,136,142,146,152,156,162,168,174,181,187,193,194,193,190,185,183,177,176,174,173,173,172,171,162,152,143,135,128,124,123));
+//            jg.paint();
+
+
+
+           // jg.setColor("#00ff00");
+           // jg.drawPolygon(new Array(161, 154, 150, 150, 152, 155, 158, 162, 166, 171, 176, 181, 184, 187, 186, 184), new Array(156, 159, 163, 168, 172, 175, 177, 179, 180, 180, 180, 180, 177, 173, 168, 164));
+           // jg.paint();
+        }
+
+        function OutputFile() {
+            var cellType = "eukaryota"; // possible to be array
+            if (cellType == "eukaryota") {
+
+                var a = [];
+
+                a.push({
+                    proteinID: 'tr|Q8STW1|Q8STW1_ENCCU',
+                    proteinLocalization: 'nucleus'
+                });
+
+                a.push({
+                    proteinID: 'sp|Q8SWH2|HSP7A_ENCCU',
+                    proteinLocalization: 'nucleus'
+                });
+
+                var b = new Array();
+
+                b.push({
+                    proteinID: 'tr|Q8STW1|Q8STW1_ENCCU',
+                    proteinLocalization: 'mitrocondria'
+                });
+                var c = new Array();
+                var d = new Array();
+                var e = new Array();
+                var f = new Array();
+                var g = new Array();
+                var h = new Array();
+                var i = new Array();
+
+                var localization = new Array(a, b, c, d, e, f, g, h, i);
+
+            }
+            // possible to be array
+
+            var arrCellVal = new Array(cellType,localization);
+            return arrCellVal;
+        }
+
+
+        window.onload = function () {
+
+            var arrInput = OutputFile();
+            //alert(arrInput[0]);
+            DRAW(arrInput);
+        }
+
+
+
+    </script>
+
+</head>
+<body onMouseMove="javaScript:mouseEventHandler(event);">
+<DIV ID="linkPopup" STYLE="position: absolute; top: 0; left: 0; width:300px; z-index: 9000; 
+	text-decoration: none; visibility:hidden;"><TABLE BGCOLOR="blue" BORDER=1 bordercolor="blue">
+	<!-- here we have a table cell, which will hold the text.  No need to specify table dimension so that -->
+	<!-- the table will expand automatically to fir the text -->
+	<!-- Do not put a DIV inside the cell, that will not work on Firefox 1-->
+	<TR><TD STYLE="color:white;" ID="linkPopupText">Popup text</TD></TR></TABLE>
+  </DIV>
+ <p align="center">
+    <b>
+      <div id="myCanvas" style="position:relative;height:250px;width:100%;"><img name="leop" src="C:\IDP_Project\StudentJob\Miscellaneous\PP2\Euk-Cell-2D.jpg" width="500" height="400" alt=""></div>
+    </b>
+  </p>
+
+</body>
+</html>
