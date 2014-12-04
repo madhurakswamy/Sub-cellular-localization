@@ -1,0 +1,92 @@
+<html>
+
+<body>
+
+<div id="page-wrapper">
+
+		<h1>Text File Reader</h1>
+		<div>
+			Select a text file: 
+			<input type="file" id="fileInput">
+		</div>
+		<pre id="fileDisplayArea"><pre>
+
+	</div>
+	
+<script>
+	
+	window.onload = function() {
+		var fileInput = document.getElementById('fileInput');
+		var fileDisplayArea = document.getElementById('fileDisplayArea');
+
+		fileInput.addEventListener('change', function(e) {
+			var file = fileInput.files[0];
+			var textType = /text.*/;
+
+			if (file.type.match(textType)) {
+			
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					var words = (function(){
+	 
+					//split the file contents into separate lines on encountering \R or \r\n or \n
+					var fileLines = reader.result.trim().replace(/[\R\r\n]/g,',').split(/[\,]+/g);
+					console.log("Lines= "+fileLines);
+					var fileLinesCount = fileLines.length;
+					console.log("Number of lines="+fileLinesCount);
+
+					//create two new arrays - for score and localization
+					var scoreArray = [];
+					var localizationArray = [];
+					
+					//Omit the 1st two lines and start from the 3rd line
+					for (var i=2; i<fileLines.length; i++) {
+						
+						//Separate the line into words on encountering a tab and print each word
+						var arrayWords = fileLines[i].replace(/[\t]/g,',').split(/[\,]+/g);
+						console.log(arrayWords);
+		
+							// Array containing protein scores
+							scoreArray.push({
+							proteinID: arrayWords[0],
+							proteinScore: arrayWords[1]
+							});
+							
+							// Array containing protein localizations
+							localizationArray.push({
+							proteinID: arrayWords[0],
+							proteinLocalization: arrayWords[2]
+							});
+						//}
+						
+					}
+
+					//print the contents of the Score array
+					for (var i=0; i<scoreArray.length; i++) {
+					var score = scoreArray[i];
+					console.log("Protein ID + Score "+score.proteinID, score.proteinScore);
+					}
+					
+					//print the contents of the Localization array
+					for (var i=0; i<localizationArray.length; i++) {
+					var localization = localizationArray[i];
+					console.log("Protein ID + Localization " + localization.proteinID, localization.proteinLocalization);
+					}
+
+					}()); 
+ 
+				}			
+			reader.readAsText(file);			
+
+			} 
+			
+			else {
+				fileDisplayArea.innerText = "File not supported!"
+			}
+		});
+	}
+
+</script>
+	
+</body>
+</html>

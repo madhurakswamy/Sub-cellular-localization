@@ -1,0 +1,7 @@
+Eukaryota
+Protein Id	Score	Localization	Gene Ontology
+tr|Q8STW1|Q8STW1_ENCCU	20	nucleus	This is not needed
+sp|Q8SWH2|HSP7A_ENCCU	16	chloroplast	This is not needed
+tr|Q8SQK2|Q8SQK2_ENCCU	17	nucleus	This is not needed
+tr|Q8STW1|Q8STW1_ENCCU	23	cytoplasm	This is not needed
+sp|Q8SWH2|HSP7A_ENCCU	16	nucleus	This is not needed
